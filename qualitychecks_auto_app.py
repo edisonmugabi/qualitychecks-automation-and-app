@@ -57,7 +57,7 @@ data['endtime']=pd.to_datetime(data['endtime'])
 
 #converting duration to numeric
 data['duration'] = pd.to_numeric(data['duration'], errors='coerce') 
-column_drop_path = os.getenv("C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\", "qualitychecks_columns_drop.xlsx")
+column_drop_path =  "./qualitychecks_columns_drop.xlsx"
 column_drop_df = pd.read_excel(column_drop_path)
 # importing excel files with columns to drop to enhance styling process of the dataframe
 # please include all columns to drop in this sheet
