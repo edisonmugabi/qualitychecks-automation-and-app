@@ -13,7 +13,10 @@ pd.set_option("styler.render.max_elements", 2585583)
 # image_path = os.path.join(os.path.dirname("C:\\Users\\Edison New\\Pictures\\"), "Screenshots\\RTV log.png")
 
 image_path = os.path.join("C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\", "RTV log.png")
-st.sidebar.image(image_path, width=200)
+if os.path.exists(image_path):
+    st.sidebar.image(image_path, width=200)
+else:
+    st.sidebar.error("Image not found.")
 
 st.title("RTV Daily Quality checks")
 st.header("2025 BHS")
@@ -106,8 +109,6 @@ for i in season:
             price1 = f'sn_{i}_{j}_Market_Price_{k}'
             if price1 in data.columns:
                 price_1.append(price1)  
-
-
 
 list=['gnuts','yams','sweetpotatoes','irish_potatoes',
       'ginger','garlic','rice','sorghum','millet',
