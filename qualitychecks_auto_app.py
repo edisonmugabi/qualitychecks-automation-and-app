@@ -10,7 +10,8 @@ import os
 pd.set_option("styler.render.max_elements", 2585583)
 
 # Define the relative path to the image
-image_path = os.path.join(os.path.dirname("C:\\Users\\Edison New\\Pictures\\"), "Screenshots\\RTV log.png")
+# image_path = os.path.join(os.path.dirname("C:\\Users\\Edison New\\Pictures\\"), "Screenshots\\RTV log.png")
+image_path = os.path.abspath(r"C:\\Users\\Edison New\\Pictures\Screenshots\\RTV log.png")
 st.sidebar.image(image_path, use_container_width=False, width=200)
 
 st.title("RTV Daily Quality checks")
