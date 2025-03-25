@@ -119,7 +119,6 @@ for i in list:
         price1=f'sn_{j}_{i}_Market_Price'
         if price1 in data.columns:
             price_2.append(price1)       
-
 # merging prices of seasonal crops into one list for ease accessibility
 season_crop_prices=price_1+price_2
 
