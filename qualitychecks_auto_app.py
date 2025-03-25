@@ -12,7 +12,7 @@ pd.set_option("styler.render.max_elements", 2585583)
 # Define the relative path to the image
 # image_path = os.path.join(os.path.dirname("C:\\Users\\Edison New\\Pictures\\"), "Screenshots\\RTV log.png")
 
-image_path = os.path.join("C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\", "RTV log.png")
+image_path = "./RTV log.png"
 if os.path.exists(image_path):
     st.sidebar.image(image_path, width=200)
 else:
@@ -21,7 +21,7 @@ else:
 st.title("RTV Daily Quality checks")
 st.header("2025 BHS")
 
-data_path = os.path.join("C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\", "BHS.xlsx")
+data_path = "./BHS.xlsx"
 data = pd.read_excel(data_path)
 # def load_data():
 # data = pd.read_excel(r"C:\\Users\\Edison New\Desktop\\edison jupyter\\quality checks folder\\BHS.xlsx")
@@ -91,7 +91,7 @@ data['is_duration_invalid']=((data['duration2']<20) | (data['duration2']>60)).as
 
 # Creating columns for samples collected by enumerator the pervious day
 data['sample'] = data['enumerator_name'].map(data['enumerator_name'].value_counts())
-price_path = os.getenv("C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\", "crop_prices.xlsx")
+price_path =  "./crop_prices.xlsx"
 price_df = pd.read_excel(price_path)
 
 
