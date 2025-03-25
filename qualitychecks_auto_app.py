@@ -21,7 +21,7 @@ else:
 st.title("RTV Daily Quality checks")
 st.header("2025 BHS")
 
-data_path = os.getenv("C:\\Users\\Edison New\Desktop\\edison jupyter\\quality checks folder\\", "BHS.xlsx")
+data_path = os.path.join("C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\", "BHS.xlsx")
 data = pd.read_excel(data_path)
 # def load_data():
 # data = pd.read_excel(r"C:\\Users\\Edison New\Desktop\\edison jupyter\\quality checks folder\\BHS.xlsx")
