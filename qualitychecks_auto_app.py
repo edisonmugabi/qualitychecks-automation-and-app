@@ -11,15 +11,17 @@ pd.set_option("styler.render.max_elements", 2585583)
 
 # Define the relative path to the image
 # image_path = os.path.join(os.path.dirname("C:\\Users\\Edison New\\Pictures\\"), "Screenshots\\RTV log.png")
-image_path = os.path.abspath(r"C:\\Users\\Edison New\\Pictures\Screenshots\\RTV log.png")
+
+image_path = os.path.join("C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\", "RTV log.png")
 st.sidebar.image(image_path, width=200)
 
 st.title("RTV Daily Quality checks")
 st.header("2025 BHS")
 
-#@st.session_state
+data_path = os.getenv("C:\\Users\\Edison New\Desktop\\edison jupyter\\quality checks folder\\", "BHS.xlsx")
+data = pd.read_excel(data_path)
 # def load_data():
-data = pd.read_excel(r"C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\BHS.xlsx")
+# data = pd.read_excel(r"C:\\Users\\Edison New\Desktop\\edison jupyter\\quality checks folder\\BHS.xlsx")
 
 
 # Convert 'decision_note' column to string
@@ -52,10 +54,11 @@ data['endtime']=pd.to_datetime(data['endtime'])
 
 #converting duration to numeric
 data['duration'] = pd.to_numeric(data['duration'], errors='coerce') 
-
+column_drop_path = os.getenv("C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\", "qualitychecks_columns_drop.xlsx")
+column_drop_df = pd.read_excel(column_drop_path)
 # importing excel files with columns to drop to enhance styling process of the dataframe
 # please include all columns to drop in this sheet
-column_drop_df=pd.read_excel(r"C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\qualitychecks_columns_drop.xlsx")
+# column_drop_df=pd.read_excel(r"C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\qualitychecks_columns_drop.xlsx")
 
 # creating function to drop to drop columns and  dropping columns from data
 def columns_drop(data, column_drop_df):
@@ -85,11 +88,12 @@ data['is_duration_invalid']=((data['duration2']<20) | (data['duration2']>60)).as
 
 # Creating columns for samples collected by enumerator the pervious day
 data['sample'] = data['enumerator_name'].map(data['enumerator_name'].value_counts())
-
+price_path = os.getenv("C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\", "crop_prices.xlsx")
+price_df = pd.read_excel(price_path)
 
 
 # importing the excel sheet with min,max of major seasonal crops,vegetables, perennial crops
-price_df=pd.read_excel(r"C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\crop_prices.xlsx")
+# price_df=pd.read_excel(r"C:\\Users\\Edison New\\Desktop\\edison jupyter\\quality checks folder\\crop_prices.xlsx")
 
 list_ = ['beans', 'maize','peas','cassava']  
 season = [1, 2]
