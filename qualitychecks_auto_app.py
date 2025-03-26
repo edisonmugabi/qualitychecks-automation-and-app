@@ -40,14 +40,14 @@ data['SubmissionDate'] = pd.to_datetime(data['SubmissionDate'])
 yesterday = (datetime.today() - timedelta(days=1)).date()
 
 # converting the data of status and consent_1 form surverycto datatypes to pandas float datatype
-data[['status', 'consent_1']] = data[['status', 'consent_1']].copy(deep=True).astype(float)
+data[['status', 'consent_1']] = data[['status', 'consent_1']].astype(float)
 
 # filtering the data for the previous day and data for samples fully completed
 data = data[
     # (data['SubmissionDate'].dt.date == yesterday) &
     ((data['status'] == 1) | (data['status'] == 7)) &
     (data['consent_1'] == 1)
-].copy(deep=True)
+]
 
 # converting the starttime to datatime in pandas
 data['starttime'] = pd.to_datetime(data['starttime'])
@@ -265,7 +265,7 @@ for bus in business_number:
         data[bus_po]=np.nan
     
     if bus_sa in data.columns and bus_po in data.columns:
-        data[[bus_sa,bus_po]]=data[[bus_sa,bus_po]].copy(deep=True).astype(float)
+        data[[bus_sa,bus_po]]=data[[bus_sa,bus_po]].astype(float)
     else:
         print(f"Columns {bus_sa} or {bus_po} do not exist in the dataset.")
 
@@ -388,7 +388,7 @@ pivot=data.pivot_table(index=['pre_district','enumerator_name'],values=['price_e
                                                                         'remittance_errors','distance_time_errors','yield_per_unit_errors'],aggfunc="sum")
 pivot=pivot.reset_index()
 pivot['Total_errors'] = pivot[['price_errors', 'bussiness_errors', 'land_value_errors',
-                               'remittance_errors', 'distance_time_errors', 'yield_per_unit_errors']].copy(deep=True).sum(axis=1)
+                               'remittance_errors', 'distance_time_errors', 'yield_per_unit_errors']].sum(axis=1)
 # Inject Custom CSS for Uniform Box Sizes and Colors
 st.markdown("""
     <style>
