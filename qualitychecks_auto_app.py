@@ -595,80 +595,80 @@ with st.expander("View Detailed Data"):
 # Access the underlying DataFrame before iterating over rows
 data_frame = data.data  # Access the DataFrame from the Styler object
 
-with pd.ExcelWriter(f'quality_checks_{yesterday}.xlsx', engine='xlsxwriter',
-                    engine_kwargs={'options': {'nan_inf_to_errors': True}}) as writer:
-    data_frame.to_excel(writer, index=False, sheet_name='QualityChecks')
-    workbook = writer.book
-    worksheet = writer.sheets['QualityChecks']
+# with pd.ExcelWriter(f'quality_checks_{yesterday}.xlsx', engine='xlsxwriter',
+#                     engine_kwargs={'options': {'nan_inf_to_errors': True}}) as writer:
+#     data_frame.to_excel(writer, index=False, sheet_name='QualityChecks')
+#     workbook = writer.book
+#     worksheet = writer.sheets['QualityChecks']
 
-    # Define red background format for out-of-range values
-    red_format = workbook.add_format({'bg_color': '#FF0000'})
+#     # Define red background format for out-of-range values
+#     red_format = workbook.add_format({'bg_color': '#FF0000'})
 
-    # Apply red background for price range and other checks
-    crop_prices = {row["Crop"].strip(): (row["Min"], row["Max"]) for _, row in price_df.iterrows()}
-    for row_num, row in data_frame.iterrows():
-        for col_num, value in enumerate(row):
-            crop_name = data_frame.columns[col_num].strip()
-            price_range = crop_prices.get(crop_name)
-            if price_range:
-                min_price, max_price = price_range
-                if pd.notna(value) and (value < min_price or value > max_price):
-                    worksheet.write(row_num + 1, col_num, value, red_format)
-                else:
-                    worksheet.write(row_num + 1, col_num, value)
-            else:
-                if pd.api.types.is_numeric_dtype(value):
-                    worksheet.write(row_num + 1, col_num, value)
-                else:
-                    worksheet.write_string(row_num + 1, col_num, str(value))
+#     # Apply red background for price range and other checks
+#     crop_prices = {row["Crop"].strip(): (row["Min"], row["Max"]) for _, row in price_df.iterrows()}
+#     for row_num, row in data_frame.iterrows():
+#         for col_num, value in enumerate(row):
+#             crop_name = data_frame.columns[col_num].strip()
+#             price_range = crop_prices.get(crop_name)
+#             if price_range:
+#                 min_price, max_price = price_range
+#                 if pd.notna(value) and (value < min_price or value > max_price):
+#                     worksheet.write(row_num + 1, col_num, value, red_format)
+#                 else:
+#                     worksheet.write(row_num + 1, col_num, value)
+#             else:
+#                 if pd.api.types.is_numeric_dtype(value):
+#                     worksheet.write(row_num + 1, col_num, value)
+#                 else:
+#                     worksheet.write_string(row_num + 1, col_num, str(value))
 
-        # Apply highlight_time red background checks
-        colors = highlight_time(row)
-        for col_num, color in enumerate(colors):
-            if color:  # Apply red background from highlight_time function
-                worksheet.write(row_num + 1, col_num, row[col_num], red_format)
+#         # Apply highlight_time red background checks
+#         colors = highlight_time(row)
+#         for col_num, color in enumerate(colors):
+#             if color:  # Apply red background from highlight_time function
+#                 worksheet.write(row_num + 1, col_num, row[col_num], red_format)
 
-    # Header formatting
-    header_format = workbook.add_format({'bold': True, 'bg_color': '#D7E4BC'})
-    for col_num, value in enumerate(data_frame.columns.values):
-        worksheet.write(0, col_num, value, header_format)
+#     # Header formatting
+#     header_format = workbook.add_format({'bold': True, 'bg_color': '#D7E4BC'})
+#     for col_num, value in enumerate(data_frame.columns.values):
+#         worksheet.write(0, col_num, value, header_format)
 
-    workbook = writer.book
-    worksheet = writer.sheets['QualityChecks']
+#     workbook = writer.book
+#     worksheet = writer.sheets['QualityChecks']
 
-    # Define red background format for out-of-range values
-    red_format = workbook.add_format({'bg_color': '#FF0000'})
+#     # Define red background format for out-of-range values
+#     red_format = workbook.add_format({'bg_color': '#FF0000'})
 
-    # Apply red background for price range and other checks
-    crop_prices = {row["Crop"].strip(): (row["Min"], row["Max"]) for _, row in price_df.iterrows()}
-    for row_num, row in data_frame.iterrows():
-        for col_num, value in enumerate(row):
-            crop_name = data_frame.columns[col_num].strip()
-            price_range = crop_prices.get(crop_name)
-            if price_range:
-                min_price, max_price = price_range
-                if pd.notna(value) and (value < min_price or value > max_price):
-                    worksheet.write(row_num + 1, col_num, value, red_format)
-                else:
-                    worksheet.write(row_num + 1, col_num, value)
-            else:
-                worksheet.write(row_num + 1, col_num, value)
+#     # Apply red background for price range and other checks
+#     crop_prices = {row["Crop"].strip(): (row["Min"], row["Max"]) for _, row in price_df.iterrows()}
+#     for row_num, row in data_frame.iterrows():
+#         for col_num, value in enumerate(row):
+#             crop_name = data_frame.columns[col_num].strip()
+#             price_range = crop_prices.get(crop_name)
+#             if price_range:
+#                 min_price, max_price = price_range
+#                 if pd.notna(value) and (value < min_price or value > max_price):
+#                     worksheet.write(row_num + 1, col_num, value, red_format)
+#                 else:
+#                     worksheet.write(row_num + 1, col_num, value)
+#             else:
+#                 worksheet.write(row_num + 1, col_num, value)
 
-        # Apply highlight_time red background checks
-        colors = highlight_time(row)
-        for col_num, color in enumerate(colors):
-            if color:  # Apply red background from highlight_time function
-                worksheet.write(row_num + 1, col_num, row[col_num], red_format)
+#         # Apply highlight_time red background checks
+#         colors = highlight_time(row)
+#         for col_num, color in enumerate(colors):
+#             if color:  # Apply red background from highlight_time function
+#                 worksheet.write(row_num + 1, col_num, row[col_num], red_format)
 
-    # Header formatting
-    header_format = workbook.add_format({'bold': True, 'bg_color': '#D7E4BC'})
-    for col_num, value in enumerate(data_frame.columns.values):
-        worksheet.write(0, col_num, value, header_format)
+#     # Header formatting
+#     header_format = workbook.add_format({'bold': True, 'bg_color': '#D7E4BC'})
+#     for col_num, value in enumerate(data_frame.columns.values):
+#         worksheet.write(0, col_num, value, header_format)
 
 # Provide the download link for the Excel file
-st.download_button(
-    label="Download data as Excel",
-    data=open(f'quality_checks_{yesterday}.xlsx', 'rb').read(),
-    file_name=f'quality_checks_{yesterday}.xlsx',
-    mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-)
+# st.download_button(
+#     label="Download data as Excel",
+#     data=open(f'quality_checks_{yesterday}.xlsx', 'rb').read(),
+#     file_name=f'quality_checks_{yesterday}.xlsx',
+#     mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+# )
