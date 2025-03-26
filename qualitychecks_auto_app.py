@@ -583,7 +583,7 @@ def highlight_time(row):
     return colors
 
 # Apply both highlighting functions
-data = apply_highlighting(data, price_df).apply(highlight_time, axis=1)  # Apply both functions
+# data = apply_highlighting(data, price_df).apply(highlight_time, axis=1)  # Apply both functions
 
 # Streamlit UI for showing the data and download option
 st.divider()
@@ -593,7 +593,7 @@ with st.expander("View Detailed Data"):
     st.dataframe(data)
 
 # Access the underlying DataFrame before iterating over rows
-data_frame = data.data  # Access the DataFrame from the Styler object
+# data_frame = data.data  # Access the DataFrame from the Styler object
 
 # with pd.ExcelWriter(f'quality_checks_{yesterday}.xlsx', engine='xlsxwriter',
 #                     engine_kwargs={'options': {'nan_inf_to_errors': True}}) as writer:
