@@ -9,22 +9,17 @@ import os
 
 pd.set_option("styler.render.max_elements", 2585583)
 
-# Define the relative path to the image
-# image_path = os.path.join(os.path.dirname("C:\\Users\\Edison New\\Pictures\\"), "Screenshots\\RTV log.png")
 
-image_path = "./RTV log.png"
-if os.path.exists(image_path):
-    st.sidebar.image(image_path, width=200)
-else:
-    st.sidebar.error("Image not found.")
-
-st.title("RTV Daily Quality checks")
-st.header("2025 BHS")
+#image_path = "./RTV log.png"
+#if os.path.exists(image_path):
+#    st.sidebar.image(image_path, width=200)
+#else:
+    #st.sidebar.error("Image not found.")
+    
+st.title("RTV Daily Quality Checks")
 
 data_path = "./BHS.xlsx"
 data = pd.read_excel(data_path)
-# def load_data():
-# data = pd.read_excel(r"C:\\Users\\Edison New\Desktop\\edison jupyter\\quality checks folder\\BHS.xlsx")
 
 
 # Convert 'decision_note' column to string
@@ -279,7 +274,7 @@ def business_error(row):
             if row[bus_po] > row[bus_sa]:
                 error += 1
     return error
-data['bussiness_errors']=data.apply(business_error,axis=1)
+data['business_errors']=data.apply(business_error,axis=1)
 
 # computing the error computed in the remmittance values
 def count_remittance_highlights(row):
@@ -384,67 +379,77 @@ data['land_value_errors'] = data.apply(compute_land_value_errors, axis=1)
 
 #display pivot_errors 
 
-pivot=data.pivot_table(index=['pre_district','enumerator_name'],values=['price_errors','bussiness_errors','land_value_errors',
-                                                                        'remittance_errors','distance_time_errors','yield_per_unit_errors'],aggfunc="sum")
-pivot=pivot.reset_index()
-pivot['Total_errors'] = pivot[['price_errors', 'bussiness_errors', 'land_value_errors',
-                               'remittance_errors', 'distance_time_errors', 'yield_per_unit_errors']].sum(axis=1)
-# Inject Custom CSS for Uniform Box Sizes and Colors
-st.markdown("""
-    <style>
-    .metric-box {
-        width: 100%;  /* Ensures full width within the column */
-        min-height: 130px; /* Fixed height for uniformity */
-        border-radius: 12px;
-        text-align: center;
-        font-size: 18px;
-        font-weight: bold;
-        padding: 15px;
-        margin: 5px;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+pivot = data.pivot_table(
+    index=['pre_district', 'enumerator_name'],
+    values=[
+        'price_errors', 'business_errors', 'land_value_errors',
+        'remittance_errors', 'distance_time_errors', 'yield_per_unit_errors'
+    ],
+    aggfunc="sum"
+)
+pivot = pivot.reset_index()
+pivot['Total_errors'] = pivot[
+    ['price_errors', 'business_errors', 'land_value_errors',
+     'remittance_errors', 'distance_time_errors', 'yield_per_unit_errors']
+].sum(axis=1)
+
+# Display metrics using Streamlit's built-in columns with enhanced styling
+st.subheader("Metrics Summary")
+
+# Function to style boxes consistently
+def get_box_style(error_type):
+    styles = {
+        "Overall Total Errors": "background-color: #ff4d4d; color: white; border-radius: 15px; padding: 35px; text-align: center; box-shadow: 5px 5px 10px rgba(0,0,0,0.2); width: 100%; margin-bottom: 25px;",
+        "Price Errors": "background-color: #ffc107; color: white; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 4px 4px 8px rgba(0,0,0,0.2); width: 100%; margin: 10px;",
+        "Business Errors": "background-color: #007bff; color: white; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 4px 4px 8px rgba(0,0,0,0.2); width: 100%; margin: 10px;",
+        "Land Value Errors": "background-color: #28a745; color: white; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 4px 4px 8px rgba(0,0,0,0.2); width: 100%; margin: 10px;",
+        "Remittance Errors": "background-color: #dc3545; color: white; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 4px 4px 8px rgba(0,0,0,0.2); width: 100%; margin: 10px;",
+        "Distance/Time Errors": "background-color: #17a2b8; color: white; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 4px 4px 8px rgba(0,0,0,0.2); width: 100%; margin: 10px;",
+        "Yield Per Unit Errors": "background-color: #6c757d; color: white; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 4px 4px 8px rgba(0,0,0,0.2); width: 100%; margin: 10px;",
     }
-    .total-errors { background-color: #FF6B6B; color: white; } /* Red */
-    .price-errors { background-color: #4ECDC4; color: black; } /* Aqua */
-    .distance-time-errors { background-color: #FFB74D; color: black; } /* Orange */
-    .bussiness-errors { background-color: #A29BFE; color: white; } /* Purple */
-    .land-value-errors { background-color: #FFD700; color: black; } /* Gold */
-    .remittance-errors { background-color: #66BB6A; color: white; } /* Green */
-    .yield-per-unit-errors { background-color: #42A5F5; color: white; } /* Blue */
-    </style>
-""", unsafe_allow_html=True)
+    return styles.get(error_type, "background-color: #ffffff; color: black; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 4px 4px 8px rgba(0,0,0,0.2); width: 100%; margin: 10px;")
 
-# Function to display metric inside a styled box
-def styled_metric(label, value, css_class):
-    st.markdown(f"""
-        <div class="metric-box {css_class}">
-            <p>{label}</p>
-            <h1>{value}</h1>
-        </div>
-    """, unsafe_allow_html=True)
 
-# First Row: Centered "Overall Total Errors"
-_, col, _ = st.columns([1, 2, 1])  # Middle column takes twice the space
-with col:
-    styled_metric("Overall Total Errors", pivot['Total_errors'].sum(), "total-errors")
+# Full-width Overall Total Errors Box
+col_full = st.columns([1])[0]  # Single column layout
+with col_full:
+    total_errors = sum(pivot['Total_errors'])
+    st.markdown(
+        f"<div style='{get_box_style('Overall Total Errors')}'>"
+        f"<h2>Overall Total Errors</h2>"
+        f"<p style='font-size: 40px; font-weight: bold;'>{total_errors}</p>"
+        f"</div>",
+        unsafe_allow_html=True
+    )
 
-# Second Row: Three metrics with space between them
-col1, _, col2, _, col3 = st.columns([1, 0.3, 1, 0.3, 1])  # Adds spacing
-with col1:
-    styled_metric("Overall Total Price Errors", pivot['price_errors'].sum(), "price-errors")
-with col2:
-    styled_metric("Overall Distance/Time Errors", pivot['distance_time_errors'].sum(), "distance-time-errors")
-with col3:
-    styled_metric("Overall Business Errors", pivot['bussiness_errors'].sum(), "bussiness-errors")
+# Grid layout for remaining errors
+cols = st.columns(3)
+errors = ["Price Errors", "Business Errors", "Land Value Errors"]
+for i, error in enumerate(errors):
+    with cols[i]:
+        value = sum(pivot[error.lower().replace(" ", "_")])
+        st.markdown(
+            f"<div style='{get_box_style(error)}'>"
+            f"<h3>{error}</h3>"
+            f"<p style='font-size: 30px; font-weight: bold;'>{value}</p>"
+            f"</div>",
+            unsafe_allow_html=True
+        )
 
-# Third Row: Three metrics with space between them
-col1, _, col2, _, col3 = st.columns([1, 0.3, 1, 0.3, 1])  # Adds spacing
-with col1:
-    styled_metric("Overall Land Value Errors", pivot['land_value_errors'].sum(), "land-value-errors")
-with col2:
-    styled_metric("Overall Total Remittance Value Errors", pivot['remittance_errors'].sum(), "remittance-errors")
-with col3:
-    styled_metric("Overall Yield Per Unit Errors", pivot['yield_per_unit_errors'].sum(), "yield-per-unit-errors")
-st.divider()
+cols = st.columns(3)
+errors = ["Remittance Errors", "Distance/Time Errors", "Yield Per Unit Errors"]
+for i, error in enumerate(errors):
+    with cols[i]:
+        value = sum(pivot[error.lower().replace("/", "_").replace(" ", "_")])
+        st.markdown(
+            f"<div style='{get_box_style(error)}'>"
+            f"<h3>{error}</h3>"
+            f"<p style='font-size: 30px; font-weight: bold;'>{value}</p>"
+            f"</div>",
+            unsafe_allow_html=True
+        )
+st.subheader("Summary of Errors per Enumerator")
+st.write("This table summarizes the errors found in the data for each enumerator.")
 st.dataframe(pivot)
 st.download_button(
     label="Download Data",
@@ -499,7 +504,7 @@ def highlight_time(row):
         colors[row.index.get_loc('Time_travel_one_way_trip_OPD_treatment_minutes')] = 'background-color:red'
 
     # Water Collection Checks
-    if row['water_distance_collect_water_round_trip'] == 0 or row['water_distance_collect_water_round_trip'] > 8:
+    if row['water_distance_collect_water_round_trip'] == 0 or row['water_distance_collect_water_round_trip'] > 14:
         colors[row.index.get_loc('water_distance_collect_water_round_trip')] = 'background-color:red'
 
     if row['hh_water_collection_Minutes'] == 0 or row['hh_water_collection_Minutes'] >= 420:
@@ -518,10 +523,6 @@ def highlight_time(row):
         colors[row.index.get_loc('Distance_travelled_one_way_OPD_treatment')] = 'background-color:red'
         colors[row.index.get_loc('Time_travel_one_way_trip_OPD_treatment_minutes')] = 'background-color:red'
 
-    expected_time_water = row['water_distance_collect_water_round_trip'] * 60
-    if row['hh_water_collection_Minutes'] > 1.2 * expected_time_water:
-        colors[row.index.get_loc('water_distance_collect_water_round_trip')] = 'background-color:red'
-        colors[row.index.get_loc('hh_water_collection_Minutes')] = 'background-color:red'
 
     expected_time_market = row['distance_primary_market'] * 40
     if row['time_primary_market'] > 1.2 * expected_time_market:
@@ -582,8 +583,9 @@ def highlight_time(row):
 
     return colors
 
-# Apply both highlighting functions
+#Apply both highlighting functions
 # data = apply_highlighting(data, price_df).apply(highlight_time, axis=1)  # Apply both functions
+
 
 # Streamlit UI for showing the data and download option
 st.divider()
